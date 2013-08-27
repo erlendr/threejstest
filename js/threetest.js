@@ -33,12 +33,13 @@ function init() {
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, WIDTH / HEIGHT, NEAR, FAR);
 
 	//Pull camera back
-	camera.position.x = gridWidth*5;
+	camera.position.x = gridWidth*12;
 	camera.position.y = 0;
-	camera.position.z = 500;
+	camera.position.z = 100;
 
-	camera.rotation.x = 0.5;
-	
+	camera.rotation.x = 1;
+	camera.rotation.y = 1;
+	camera.rotation.z = 0.5;
 	//Create scene
 	scene = new THREE.Scene();
 
@@ -89,14 +90,27 @@ function animate() {
 	// note: three.js includes requestAnimationFrame shim
 	requestAnimationFrame(animate);
 
+	var shift = 0;
 	for(var i = 0; i < gridHeight; i++) {
+		
 		for(var j = 0; j < gridWidth; j++) {
 			if(typeof meshes[i][j] !== "undefined") {
-				meshes[i][j].rotation.x += 0.01; 
-				meshes[i][j].rotation.y += 0.02; 
+				//meshes[i][j].rotation.x += 0.01; 
+				//meshes[i][j].rotation.y += 0.02;
+
+				meshes[i][j].position.z += (sineValue(shift)*10);
 			}
 		}
+
+		shift = shift + 50;
 	}
 
 	renderer.render(scene, camera);
+}
+
+function sineValue(shift) {
+	var dt = new Date();
+	dt.setMilliseconds(dt.getMilliseconds() + shift);
+	var secs = dt.getMilliseconds();
+	return Math.sin((secs/1000)*(Math.PI*2));
 }
